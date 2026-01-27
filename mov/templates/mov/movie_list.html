@@ -1,0 +1,68 @@
+{% extends "base_menu.html" %}
+{% block content %}
+<h1>Movies</h1>
+<div style="float:right">
+<!-- https://www.w3schools.com/howto/howto_css_search_button.asp -->
+<form method="get" action="{% url 'mov:search' %}">
+  <input type="text" name="search" placeholder="Search.."
+         value="{{ search|default:'' }}">
+  <button type="submit"><i class="fa fa-search"></i></button>
+  <a href="{% url 'mov:all' %}"><i class="fa fa-undo"></i></a>
+</form>
+</div>
+<p>
+{% if movie_list %}
+<ul>
+  {% for movie in movie_list %}
+    <li>
+        <p><a href="{% url 'mov:movie_detail'  movie.id %}">{{ movie.title }}</a>, note - {{ movie.text }}</p>
+        {% if movie.owner == user %}
+        <p>
+        (<a href="{% url 'mov:movie_update' movie.id %}">Edit</a> |
+        <a href="{% url 'mov:movie_delete' movie.id %}">Delete</a>)
+        </p>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <dj4e-favstar
+            onclick="favToggle(this, '{% url 'mov:movie_toggle' movie.id %}');"
+            {% if movie.id in favorites %} fav {% endif %}
+        >
+        </dj4e-favstar>
+        {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+  <p>There are no movies in the database.</p>
+{% endif %}
+</p>
+<p>
+<a href="{% url 'mov:movie_create' %}">Add a Movie</a>
+{% if user.is_authenticated %}
+    <p> Logged in as {{ user.username }}</p>
+{% else %}
+    <p>Not currently logged in.</p>
+{% endif %}
+</p>
+<script>
+function favToggle(element, url) {
+    console.log('POSTing to', url);
+    fetch(url, { method: 'POST', body: '{}' } )
+    .then((response) => {
+        if (!response.ok) { // Check if the response status is in the 2xx range (success)
+            console.log("If you see this error, it is likely in ToggleFavoriteView()");
+            console.log("Note: It is easier to diagnose this error FireFox.");
+            throw new Error(`AJAX/fetch error status: ${response.status}, see developer console.`)
+        }
+        return response.text();
+    })
+    .then((response) => {
+        console.log(url, response);
+        element.toggleAttribute('fav');
+    }).catch((error) => {
+        alert(`Url ${url} failed ${error}`);
+    });
+}
+</script>
+<script type="module" src="/site/wc/dj4e-favstar.js"></script>
+{% endblock %}
