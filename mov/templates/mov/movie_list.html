@@ -4,9 +4,9 @@
 <div style="float:right">
 <!-- https://www.w3schools.com/howto/howto_css_search_button.asp -->
 <form method="get" action="{% url 'mov:search' %}">
-  <input type="text" name="search" placeholder="Search.."
+  <input type="text" name="Search" placeholder="Search.."
          value="{{ search|default:'' }}">
-  <button type="submit"><i class="fa fa-search"></i></button>
+  <button type="submit"><i class="fa fa-search">Search</i></button>
   <a href="{% url 'mov:all' %}"><i class="fa fa-undo"></i></a>
 </form>
 </div>
@@ -16,6 +16,7 @@
   {% for movie in movie_list %}
     <li>
         <p><a href="{% url 'mov:movie_detail'  movie.id %}">{{ movie.title }}</a>, note - {{ movie.text }}</p>
+
         {% if movie.owner == user %}
         <p>
         (<a href="{% url 'mov:movie_update' movie.id %}">Edit</a> |
@@ -24,7 +25,8 @@
         {% endif %}
         {% if user.is_authenticated %}
         <dj4e-favstar
-            onclick="favToggle(this, '{% url 'mov:movie_toggle' movie.id %}');"
+            data-url="{% url 'mov:movie_toggle' movie.id %}"
+            onclick="favToggle(this, this.dataset.url)"
             {% if movie.id in favorites %} fav {% endif %}
         >
         </dj4e-favstar>

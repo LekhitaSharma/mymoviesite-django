@@ -3,13 +3,14 @@ from mov.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpda
 from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.db.models import Q
 
 from mov.forms import CreateForm, CommentForm
+from .services import fetch_movie_data, get_wikipedia_link
 # Create your views here.
 
 class MovieListView(OwnerListView):
@@ -191,5 +192,80 @@ class ToggleFavoriteView(LoginRequiredMixin, View):
             Fav.objects.get(user=request.user, thing=t).delete()
             return HttpResponse("Favorite deleted 42")
         return HttpResponse("Something went wrong")
+    
 
+def movie_search(request):
 
+    query = request.GET.get('q')
+
+    movie_data = None
+    error = None
+
+    director_wiki = None
+    actors_wiki = []
+
+    if query:
+
+        movie_data = fetch_movie_data(query)
+
+        if movie_data.get("Response") == "False":
+
+            error = movie_data.get("Error")
+            movie_data = None
+
+        else:
+
+            director = movie_data.get("Director")
+            director_wiki = get_wikipedia_link(director)
+
+            actors = movie_data.get("Actors", "").split(", ")
+
+            for actor in actors:
+
+                actors_wiki.append({
+                    "name": actor,
+                    "wiki": get_wikipedia_link(actor)
+                })
+
+    return render(request, "mov/search.html", {
+
+        "movie_data": movie_data,
+        "director_wiki": director_wiki,
+        "actors_wiki": actors_wiki,
+        "query": query,
+        "error": error
+
+    })
+
+# def movie_search(request):
+#     query = request.GET.get('q')
+#     error = None
+#     movie_data = fetch_movie_data(query)
+
+#     director = movie_data.get("Director")
+#     director_wiki = get_wikipedia_link(director)
+
+#     actors = movie_data.get("Actors", "").split(", ")
+#     actors_wiki = []
+
+#     for actor in actors:
+#         actors_wiki.append({
+#             "name":actor,
+#             "wiki":get_wikipedia_link(actor)}
+#             )
+
+#     if query:
+
+#         if movie_data.get("Response") == "False":
+#             error = movie_data.get("Error")
+#             movie_data = None
+#             director_wiki = None
+#             actors_wiki = None
+    
+#     return render(request, "mov/search.html", {
+#         "movie_data": movie_data,
+#         "director_wiki": director_wiki,
+#         "actors_wiki": actors_wiki,
+#         "query": query,
+#         "error": error
+#     })

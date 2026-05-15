@@ -22,7 +22,7 @@
 </div>
 {% endif %}
 
-<span style="float: right;">
+<span>
 {% if movie.owner == user %}
 <a href="{% url 'mov:movie_update' movie.id %}"><i class="fa fa-pencil"></i></a>
 <a href="{% url 'mov:movie_delete' movie.id %}"><i class="fa fa-trash"></i></a>
@@ -37,7 +37,20 @@
   {% endfor %}
 </p>
 {% endif %}
-<p>Price: {{ movie.price }}</p>
+
+<form method="get" action="{% url 'mov:movie_search' %}" style="margin-top:10px;">
+    <input type="hidden" name="q" value="{{ movie.title }}">
+    <button style="
+    background-color:#28a745;
+    color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:5px;
+    cursor:pointer;"
+    type="submit">
+        🔍 Get More Details
+    </button>
+</form>
 
 <p>
 ({{ movie.updated_at|naturaltime }})
@@ -51,7 +64,9 @@
     {% csrf_token %}
     {{ comment_form|crispy }}
 <input type="submit" value="Submit">
-<input type="submit" value="All Movies" onclick="window.location.href='{% url 'mov:all' %}';return false;">
+<input type="submit" value="All Movies" 
+    data-url="{% url 'mov:all' %}"
+    onclick="window.location.href=dataset.url;return false;">
 </form>
 </p>
 {% endif %}

@@ -1,0 +1,61 @@
+<form method="GET">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search movie...">
+    <button type="submit">Search</button>
+</form>
+
+<!-- <pre>{{ movie_data }}</pre> -->
+
+{% if error %}
+  <p style="color:red;">{{ error }}</p>
+{% endif %}
+
+
+{% if movie_data %}
+    <div style="display:flex; gap:30px; align-items:flex-start;">
+
+    <img 
+        src="{{ movie_data.Poster }}" 
+        alt="Movie Poster"
+        style="width:300px;"
+    >
+
+    <div>
+        <h1>{{ movie_data.Title }}</h1>
+
+        <p><strong>Release year:</strong> {{ movie_data.Year }}</p>
+
+        <p><strong>IMDB rating:</strong> {{ movie_data.imdbRating }}</p>
+
+        <p>
+            <strong>Directed by:</strong>
+            <a href="{{ director_wiki }}" target="_blank">
+                {{ movie_data.Director }}
+            </a>
+        </p>
+
+        <p>
+            <strong>Cast:</strong>
+            <ul>
+            {% for actor in actors_wiki %}
+            <li>
+                <a href="{{ actor.wiki }}" target="_blank">
+                    {{ actor.name }}
+                </a>
+            </li>
+            {% endfor %}
+            </ul>
+        </p>
+
+        <p><strong>Awards:</strong> {{ movie_data.Awards }}</p>
+
+        <div style="max-width:700px;">
+        <p>
+            <strong>Movie Plot:</strong>
+            {{ movie_data.Plot }}
+        </p>
+        </div>
+    </div>
+
+</div>
+    
+{% endif %}

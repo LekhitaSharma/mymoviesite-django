@@ -22,4 +22,5 @@ urlpatterns = [
         views.ToggleFavoriteView.as_view(), name='movie_toggle'),
     path('search/',
         views.PostListView.as_view(), name='search'),
+    path('details/', views.movie_search, name='movie_search'),
 ]

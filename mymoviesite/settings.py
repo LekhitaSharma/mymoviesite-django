@@ -21,16 +21,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.environ.get("DEBUG") == "True"
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 
-ALLOWED_HOSTS = ['lekhitas.pythonanywhere.com']
+ALLOWED_HOSTS = []
 
 # Application definition
 

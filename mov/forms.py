@@ -18,7 +18,7 @@ class CreateForm(forms.ModelForm):
     # Hint: this will need to be changed for use in the ads application :)
     class Meta:
         model = Movie
-        fields = ['title', 'text', 'tags', 'picture']  # Picture is manual
+        fields = ['title', 'review', 'tags', 'picture']  # Picture is manual
 
     # Validate the size of the picture
     # def clean(self):
