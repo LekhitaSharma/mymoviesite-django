@@ -23,7 +23,6 @@ Sign up, login, logout, password reset
 CRUD for Movies
 
 Add, edit, delete your own movies (owner-based permissions)
-Rich Relationships
 
 One-to-Many: User → Movies
 Many-to-Many: Movies ↔ Tags/Genres
