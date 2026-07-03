@@ -35,7 +35,7 @@ Tags & Filtering
 Add custom tags, filter by genre/tag
 APIs
 
-Auto-fetch movie details (title, year, plot, poster) from OMDb API / TMDB API
+Auto-fetch movie details (title, year, plot, poster) from OMDb API
 Admin Panel
 
 Full Django admin for movies, users, tags
